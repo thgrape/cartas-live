@@ -1,0 +1,528 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  background-size: cover;
+  background-image: url("images/fundo.jpg");
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1920px;
+  height: 1080px;
+  margin: 0;
+  overflow: hidden;
+}
+
+#game-container {
+  display: flex;
+}
+
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(6, 200px);
+  grid-template-rows: repeat(4, 200px);
+  gap: 20px;
+}
+
+.card {
+  width: 148px;
+  height: 207px;
+  perspective: 1000px;
+  position: relative;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-out;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-face.front {
+  background-size: cover;
+  background-image: url("images/verso.png");
+}
+
+.card-face.back {
+  background-color: #777;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.modal-content {
+  position: relative; 
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#reward-message {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#reward-image img {
+  width: 600px;
+  height: 800px;
+  object-fit: contain;
+  border-radius: 30px;
+}
+
+/* --- BOTÕES DE MENU --- */
+
+/* Botão Mudar Verso */
+#btn-mudar-verso-container {
+  position: fixed;
+  top: 15px;
+  left: 85px;
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+}
+
+#btn-mudar-verso {
+  opacity: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0099ff;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#btn-mudar-verso-container:hover #btn-mudar-verso {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Botão RAZZLE (R) */
+#btn-razzle-card-container {
+  position: fixed;
+  top: 15px; 
+  left: 15px;
+  width: 60px;
+  height: 30px;
+  cursor: pointer;
+}
+
+#btn-show-razzle-card {
+  opacity: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #28a745; 
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#btn-razzle-card-container:hover #btn-show-razzle-card {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Botão SECRETA 2 (S2) */
+#btn-secreta2-container {
+  position: fixed;
+  top: 50px; 
+  left: 15px;
+  width: 60px;
+  height: 30px;
+  cursor: pointer;
+}
+
+#btn-show-secreta2 {
+  opacity: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff; /* Azul */
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#btn-secreta2-container:hover #btn-show-secreta2 {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Botão SECRETA 1 (S1) */
+#btn-secreta1-container {
+  position: fixed;
+  top: 85px; 
+  left: 15px;
+  width: 60px;
+  height: 30px;
+  cursor: pointer;
+}
+
+#btn-show-secreta1 {
+  opacity: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #6f42c1; 
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#btn-secreta1-container:hover #btn-show-secreta1 {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* --- CONTROLE DE VOLUME --- */
+#volume-container {
+  position: fixed;
+  top: 195px;
+  left: 15px;
+  width: 40px; 
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
+  overflow: hidden;
+  transition: width 0.4s ease, background-color 0.3s;
+  z-index: 1000;
+}
+
+#volume-container label {
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  user-select: none;
+}
+
+#volume-slider {
+  width: 90px;
+  cursor: pointer;
+  accent-color: #007bff;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+#volume-container:hover {
+  width: 160px;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+#volume-container:hover #volume-slider {
+  opacity: 1;
+}
+
+/* --- ELEMENTOS GERAIS E ANIMAÇÕES --- */
+
+.close-button {
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  z-index: 1001;
+}
+
+.close-button:hover {
+  color: rgb(226, 18, 226);
+}
+
+@keyframes abrirModal {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-content.animar {
+  animation: abrirModal 0.4s ease forwards;
+}
+
+/* Estilos da Fofoca */
+#fofoca-container {
+  display: none;
+  background-color: rgba(30, 0, 50, 0.85);
+  border: 1px solid #ff00cc;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  max-width: 600px;
+  box-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
+  text-align: center;
+}
+
+#fofoca-title {
+  margin: 0 0 10px 0;
+  color: #ff00cc;
+  font-size: 22px;
+}
+
+#fofoca-text {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* Botão Especial da Elphaba */
+#btn-elphaba-passiva {
+  display: block;
+  margin: 15px auto;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #28a745, #6f42c1); 
+  border: 2px solid #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(40, 167, 69, 0.7);
+  animation: pulsare 1.5s infinite;
+}
+
+@keyframes pulsare {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Container da Mini Loja */
+#mini-loja-container {
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 40px;
+  border-radius: 20px;
+  border: 3px solid #6f42c1;
+  text-align: center;
+  width: 90%;
+  max-width: 1200px;
+  box-shadow: 0 0 30px rgba(111, 66, 193, 0.6);
+}
+
+#mini-loja-container h3 {
+  font-size: 36px;
+  margin-bottom: 30px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#mini-loja-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  justify-items: center;
+}
+
+.mini-card {
+  width: 200px;
+  height: 280px;
+  background-image: url("images/verso.png");
+  background-size: cover;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 2px solid white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.mini-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #28a745;
+  border-color: #28a745;
+  z-index: 10;
+}
+
+/* === BOTÃO SPLIT — Vidro Quântico Avançado === */
+#btn-split-shop {
+  all: unset;                   /* evitar conflitos */
+  display: none;                /* mostrado pelo JS */
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2001;
+  cursor: pointer;
+  border-radius: 14px;
+  padding: 12px 20px;
+  min-width: 220px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Glass base */
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+  color: #dffbff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  text-shadow: 0 1px 8px rgba(0,220,255,0.12);
+
+  /* subtle border + glow */
+  border: 1px solid rgba(160,230,255,0.12);
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.45),
+    0 0 18px rgba(0,200,255,0.08),
+    inset 0 2px 12px rgba(255,255,255,0.02);
+  transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s, background .22s;
+  overflow: visible;
+}
+
+/* inner wrapper (align icon + text) */
+#btn-split-shop .qs-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+/* icon */
+#btn-split-shop .qs-icon {
+  display: inline-block;
+  color: #9ff7ff;
+  opacity: 0.95;
+  transform: translateZ(0);
+  filter: drop-shadow(0 6px 10px rgba(0,170,255,0.06));
+}
+
+/* text */
+#btn-split-shop .qs-text {
+  display: inline-block;
+  transform: translateZ(0);
+  white-space: nowrap;
+}
+
+/* rotating aura under the button (pseudo element) */
+#btn-split-shop::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 18px;
+  background: radial-gradient(60% 60% at 30% 30%, rgba(0,255,255,0.12), rgba(150,0,255,0.06), transparent 40%);
+  z-index: 0;
+  filter: blur(12px);
+  opacity: 0.9;
+  pointer-events: none;
+  transition: opacity .25s;
+  transform: translateZ(0);
+  animation: qs-aura 6s linear infinite;
+}
+
+/* glossy sweep */
+#btn-split-shop::after {
+  content: "";
+  position: absolute;
+  left: -60%;
+  top: -40%;
+  width: 220%;
+  height: 220%;
+  transform: rotate(15deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02), rgba(255,255,255,0.08));
+  opacity: 0.0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity .45s, transform 1.1s;
+}
+
+/* hover/focus */
+#btn-split-shop:hover,
+#btn-split-shop:focus {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.55),
+    0 0 40px rgba(0,220,255,0.12),
+    inset 0 0 30px rgba(150,0,255,0.06);
+}
+#btn-split-shop:hover::after,
+#btn-split-shop:focus::after {
+  opacity: 0.55;
+  transform: translateX(6%) rotate(15deg);
+}
+
+/* small press effect */
+#btn-split-shop:active {
+  transform: translateY(-1px) scale(0.995);
+  transition: transform .08s;
+}
+
+/* keyboard focus */
+#btn-split-shop:focus {
+  outline: none;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.6),
+    0 0 48px rgba(0,220,255,0.18);
+}
+
+/* aura animation */
+@keyframes qs-aura {
+  0% { transform: translateZ(0) scale(1) rotate(0deg); opacity: 0.9; }
+  50% { transform: translateZ(0) scale(1.04) rotate(180deg); opacity: 1; }
+  100% { transform: translateZ(0) scale(1) rotate(360deg); opacity: 0.9; }
+}
+
+/* RESPONSIVO: botão não estoura no modal */
+@media (max-width: 900px) {
+  #btn-split-shop { min-width: 160px; padding: 10px 16px; font-size: 15px; }
+  #btn-split-shop .qs-text { font-size: 14px; }
+}
